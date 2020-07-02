@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:replace="${title}">博客详情</title>
+  <link href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+  <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+  <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/lib/prism/prism.css}">
+  <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/lib/tocbot/tocbot.css}">
+  <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+
+
+<!--导航-->
+<nav th:fragment="menu(n)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+  <div class="ui container">
+    <div class="ui inverted secondary stackable menu">
+      <h2 class="ui teal header item">Blog</h2>
+      <a href="#" th:href="@{/}" class="m-item item m-mobile-hide " th:classappend="${n==1} ? 'active'"><i class="mini home icon"></i>首页</a>
+      <a href="#" th:href="@{/types/-1}" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="mini idea icon"></i>分类</a>
+      <a href="#" th:href="@{/tags/-1}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="mini tags icon"></i>标签</a>
+      <a href="#" th:href="@{/archives}" class="m-item item m-mobile-hide" th:classappend="${n==4} ? 'active'"><i class="mini clone icon"></i>归档</a>
+      <a href="#" th:href="@{/about}" class="m-item item m-mobile-hide" th:classappend="${n==5} ? 'active'"><i class="mini info icon"></i>关于我</a>
+      <a href="#" th:href="@{/admin}" class="m-item item m-mobile-hide" target="_blank" th:classappend="${n==6} ? 'active'"><i class="mini info icon"></i>后台</a>
+      <div class="right m-item item m-mobile-hide">
+        <form name="search" action="#" th:action="@{/search}" method="post" target="_blank">
+          <div class="ui icon inverted transparent input m-margin-tb-tiny">
+            <input type="text" name="query" placeholder="Search...." th:value="${query}">
+            <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+
+
+
+<!--底部footer-->
+<footer th:fragment="footer" class="ui inverted vertical segment m-padded-tb-massive">
+  <div class="ui center aligned container">
+    <div class="ui inverted divided stackable grid">
+      <div class="three wide column">
+        <div class="ui inverted link list">
+          <div class="item">
+            <img src="../static/images/wechat.jpg" th:src="@{/images/wechat.jpg}"  class="ui rounded image" alt="" style="width: 110px">
+          </div>
+        </div>
+      </div>
+      <div class="three wide column" >
+        <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+        <div id="newblog-container">
+          <div class="ui inverted link list" th:fragment="newblogList">
+            <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="item m-text-thin" th:each="blog : ${newblogs}" th:text="${blog.title}">用户故事（User Story）</a>
+            <!--/*-->
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <!--*/-->
+          </div>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item m-text-thin" th:text="#{index.email}">Email：lirenmi@163.com</a>
+          <a href="#" class="item m-text-thin" th:text="#{index.qq}">QQ：865729312</a>
+        </div>
+      </div>
+      <div class="seven wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+        <p class="m-text-thin m-text-spaced m-opacity-mini" th:text="#{index.blogDescription}">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
+      </div>
+    </div>
+    <div class="ui inverted section divider"></div>
+    <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2016 - <span th:text="${#dates.year(#dates.createNow())}">2017</span> 南宫乘风 Designed by 南宫乘风</p>
+  </div>
+
+</footer>
+<div id="main">
+  <div id="aplayer"></div>
+</div>
+<script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script>
+<th:block th:fragment="script">
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+  <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+  <script src="../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
+  <script src="../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
+  <script src="../static/lib/waypoints/jquery.waypoints.min.js" th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
+  <script>
+      $('#newblog-container').load(/*[[@{/footer/newblog}]]*/"/footer/newblog");
+  </script>
+  <script>
+        var ap = new APlayer ({
+          element: document.getElementById('aplayer'),
+          narrow: false,
+          /*自动播放，默认值为false，true为开启自动播放*/
+          autoplay: true,
+          fixed: true,
+          showlrc: false,
+          /*lrc歌词显示方式,默认值为1,HTML显示方式，2为JavaScript字符串显示方式，3为lrc文件加载显示方式*/
+          lrcType: 3,
+          /*主题颜色*/
+          theme: '#00b5ad',
+          /*歌曲集合列表*/
+          audio:[
+              {
+                  /*歌名*/
+                  title: 'Faylinn',
+                  /*作者*/
+                  author: 'David Hicken',
+                  /*歌曲*/
+                  url: 'http://m10.music.126.net/20200612200147/b0f2787a65dbec2197db38fe4c496925/ymusic/62ca/cfc8/3215/146162401cb1c5063b5b82aaaeaf89cd.mp3',
+                  /*音乐专辑图片*/
+                  pic: 'https://p2.music.126.net/EB7464Vyd58PDDET-wt05A==/109951163441559916.jpg?param=34y34',
+
+              } ,
+              {
+                  /*歌名*/
+                  title: 'なぞなぞワルツ',
+                  /*作者*/
+                  author: 'コーコーヤ',
+                  /*歌曲*/
+                  url: 'http://m10.music.126.net/20200612200655/9d4e160c756f356ee1c5d807fa9efec3/ymusic/60a1/ec7a/e20d/034a1f6615d3ee8c1f018c18fdd82a20.mp3',
+                  /*音乐专辑图片*/
+                  pic: 'http://p1.music.126.net/ROoeYAyHTJ8RiN5X-ztHTQ==/2766371255529869.jpg?param=34y34',
+                  // /*歌词*/
+                  // lrc: 'lrc/ainimeicha.lrc'<img src="http://p1.music.126.net/ROoeYAyHTJ8RiN5X-ztHTQ==/2766371255529869.jpg?param=34y34">
+              },
+              {
+                  /*歌名*/
+                  title: 'A Piacere',
+                  /*作者*/
+                  author: 'mama!milk',
+                  /*歌曲*/
+                  url: 'http://m10.music.126.net/20200612201016/b609fe84766848754c65e5d816ec18ec/ymusic/49b1/7986/c8ce/1d6a1c86fb159a54390327bfa2dc6a5b.mp3',
+                  /*音乐专辑图片*/
+                  pic: 'http://p2.music.126.net/i7w5DXxjI2EWc9UI33I0OA==/787250325509917.jpg?param=34y34',
+                  // /*歌词*/
+                  // lrc: 'lrc/ainimeicha.lrc'
+              },
+              {
+                  /*歌名*/
+                  title: 'Come a Little Bit Closer',
+                  /*作者*/
+                  author: 'Jay & the Americans',
+                  /*歌曲*/
+                  url: 'http://m10.music.126.net/20200612201340/4bf42897960ca4694fc84d0741d316d8/ymusic/0b89/7ac0/a12e/180c7810f06d9deabe3723032a54159f.mp3',
+                  /*音乐专辑图片*/
+                  pic: 'http://p1.music.126.net/sCmlogyXI3bF1kWZviuWLw==/18973172648993092.jpg?param=34y34',
+                  // /*歌词*/
+                  // lrc: 'lrc/ainimeicha.lrc'
+              }
+
+          ]
+      });
+  </script>
+</th:block>
+
+</body>
+</html>
